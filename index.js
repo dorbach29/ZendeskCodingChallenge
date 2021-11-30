@@ -33,8 +33,38 @@ Jest to test
 --Module that handles Zendesk API
 --Module that handles Server Side Logic 
 -- Express APi that handles Data requests
+*/
+
+/*
+  I'm thinking we'll get get all the data for a session at once and give the user the option to "refresh"
+
+  Endpoints:
+
+  Landing (Refresh will also hit this point)
+    Gets data returns first page of data
+
+  Page (option 1)
+    Params: page number 
+    Returns: data on page
+    Errors: page does not exist, data not loaded 
+    If data is loaded for the server, returns the data that is on selected page
+
+  NextPage (Option 2)
+    Params: None
+    Returns: Data on the next page
+    Errors: No next page
+    If there is a next page, returns the data in that page
 
 
-  
+  PreviousPage (Option 2)
+    Params: None
+    Returns: Data on the previous page
+    Errors: No next page
+    If there is a next page, returns the data in that page
 
+    Ticket
+      Params: TicketId
+      Returns: All Info about this ticket
+      Errors: TicketId does not exist 
+      If ticket exists returns ticket. 
 */
