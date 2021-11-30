@@ -1,0 +1,64 @@
+/*Style for the list that contains the tickets on landing page*/
+#ticket-list {
+    list-style: none; 
+    overflow-y:scroll;
+    height: 80vh;
+    background-color: #17494D;
+}
+
+/*General Style for body*/
+body {
+    background-color: #03363D;
+     text-align: center; 
+     font-family:sans-serif;
+}
+
+/*Light text color */
+.text-white{
+    color:#F8F9F9;
+}
+
+/*Classes that have to do with ticket displays in a list*/
+.list-section {
+    text-align: left;
+    height: 80%;
+    margin: auto;
+    vertical-align: middle;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.border {
+    height: 100%;
+    width: 1px;
+    background-color: #17494D;
+    margin-right: 3px;
+    opacity: 50%;
+}
+.subject {
+    width: 40%; 
+}
+
+.requester {
+    width: 25%
+}
+
+.requested {
+    width: 25%
+}
+
+.priority {
+    width: 10%
+}
+
+/*Display box for a ticket on landing page */
+.ticket-box {
+    background-color: #BDD9D7; 
+    width: 80%; 
+    height: 4rem; 
+    margin: auto; 
+    margin-top: 1rem; 
+    margin-bottom: 1rem;
+    display:flex;
+    flex-direction: row;
+}
