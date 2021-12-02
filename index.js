@@ -9,9 +9,17 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/static/landing.html'))
 })
 
+app.get('/landing', (req , res) => {
+  
+})
+
 app.listen(port, () => {
   console.log(`Server up`)
 })
+
+
+
+
 /* Daniel - Notes on Project
 
 We need to serve some kind of webpage to the browser
@@ -38,33 +46,56 @@ Jest to test
 /*
   I'm thinking we'll get get all the data for a session at once and give the user the option to "refresh"
 
-  Endpoints:
+
 
   Landing (Refresh will also hit this point)
     Gets data returns first page of data
 
-  Page (option 1)
-    Params: page number 
-    Returns: data on page
-    Errors: page does not exist, data not loaded 
-    If data is loaded for the server, returns the data that is on selected page
-
   NextPage (Option 2)
-    Params: None
-    Returns: Data on the next page
-    Errors: No next page
-    If there is a next page, returns the data in that page
+    Params: nextPageUrl 
+    Returns: data on the next page 
+    Errors: url not valid
+    Grabs the next page for the server if URL is correct
+  
+  
+  Previous Page 
+    Goes to the previos page if it exists 
+    Params: prevPageUrl
+    Returns: data on the previous page
+    Errors: url not valid 
+    Grabs the data for the previous page
+
+    
 
 
-  PreviousPage (Option 2)
-    Params: None
-    Returns: Data on the previous page
-    Errors: No next page
-    If there is a next page, returns the data in that page
+  Ticket
+    Params: TicketId
+    Returns: All Info about this ticket
+    Errors: TicketId does not exist 
+    If ticket exists returns ticket. 
 
-    Ticket
-      Params: TicketId
-      Returns: All Info about this ticket
-      Errors: TicketId does not exist 
-      If ticket exists returns ticket. 
+
+      //How would we grow this application in the futrue?
+        Add a sign in, multiple people using the viewer to view different tickets 
+          This means that no data should really be server wide because it will really depend on the account
+          that is using this app.
+
+          No data stays in the server all goes directly to the user. 
+        Increase the amount of data that we are viewing 
+
+      //We want to limit the amount of data that has to be sent over initially
+        //Say there were 500 tickets (maybe) would we want to load all of them? 
+        //No user might only scroll through one or two pages so no point in sending all tickets]
+        //Only get tickets for the page when you are on it
+        //Use cursor method
+
+      //Updated real time?
+        Unless we implement polling or sockets (which we can't) page refresh can only maybe be made when 
+        user switches pages. But is this really critical? One theres a chacne this could mess up page
+        also the user most likely doesn't need to see ticket changes in the few moments since he switched tabs.
+        Best policy is probably just to have a refresh button, and consider having some kind of polling method
+        for later. 
+
+      //
+
 */

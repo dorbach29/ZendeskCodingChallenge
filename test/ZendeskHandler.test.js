@@ -1,5 +1,5 @@
 const {getAllTickets,  getTicketCount, evaluatePageBody} = require("../ZendeskHandler");
-const tp = require("./tpData");
+const tp = require("./ZendeskHandlerData");
 
 
 

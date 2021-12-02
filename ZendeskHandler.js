@@ -262,7 +262,7 @@ async function getTicketPage(after_cursor){
         };
 
         evaluatePageBody(val, response.body);
-
+        return val;
 
     } catch (err){
         console.log("Error:");
