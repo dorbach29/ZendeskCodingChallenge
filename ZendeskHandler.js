@@ -60,7 +60,6 @@ function asyncGet(url){
  * Returns the info corresponding to an individual ticket 
  * 
  */
-//TODO: Handle for NUll case when no ticket is returned
 async function getTicketInfo(ticketId){
     const val = {
         error : "none",
@@ -132,7 +131,7 @@ async function getAllTickets(){
         tickets : [], 
         users : new Map(),
     }
-    let nextUrl = `https://${SUBD}.zendesk.com/api/v2/incremental/tickets/cursor.json?start_time=0&per_page=100&include=users`;
+    let nextUrl = `https://${SUBD}.zendesk.com/api/v2/incremental/tickets/cursor.json?start_time=0&per_page=25&include=users`;
     try {
         let cont = true; 
         while(cont){
@@ -146,7 +145,7 @@ async function getAllTickets(){
             cont = !response.body.end_of_stream;
             nextUrl = response.body.after_url; 
 
-            //Pushing Tickets and adidng users
+            //Pushing Tickets and adding users
             val.tickets.push(...response.body.tickets);
             for(let i = 0; i < response.body.users.length; i ++){
                 let user = response.body.users[i];
@@ -164,10 +163,121 @@ async function getAllTickets(){
 }
 
 
+/*
+Analyze and return data for page loading functions (below)
+*/
+function evaluatePageBody(val, body){
+    val.tickets = body.tickets;
+    val.endOfStream = body.end_of_stream;
+    val.nextCursor = body.after_cursor;
+    val.firstOfStream = !body.before_cursor;
+    val.prevCursor = body.before_cursor;
+
+    for(let i = 0; i < body.users.length; i ++){
+        let user = body.users[i];
+        val.users.set(user.id, user);
+    }
+
+    return val;
+}
+
+
+/*
+Gives initial page of 25 tickests as well as the user that sent them. 
+Params : none
+Returns :
+    tickets : Array of first 25 tickets
+    users: Map of users who wrote the tickets k:id v:users
+    endOfStream : bool wether there are more tickets
+    nextCursor: next cursor (if exists)
+    firstOfSteam : true
+    prevCursor : null
+*/
+
+async function getFirstPage(){
+    let val = {
+        statusCode : 200,
+        error : 'none',
+        tickets : [],
+        users : new Map(),
+        endOfStream : true,
+        nextCursor : null,
+        firstOfStream : true,
+        prevCursor : null, 
+    }
+    try {
+        let url = `https://${SUBD}.zendesk.com/api/v2/incremental/tickets/cursor.json?start_time=0&per_page=25&include=users`;
+        let response = await asyncGet(url);
+        if(response.statusCode != 200){
+            val.statusCode = response.statusCode;
+            val.error = response.body.error
+            return val;
+        };
+
+        evaluatePageBody(val, response.body);
+
+        return val;
+
+    } catch (err){
+        console.log("Error:");
+        console.log(err);
+        val.error = err;
+        return val;
+    }
+}
+
+/*
+Returns 25 tickets for a zendeska account along with users that wrote those tickets. 
+Indicates wether there are more tickets or not. 
+Params: after_cursor
+Returns: {
+    statusCode,
+    error,
+    tickets : Array of first 25 tickets
+    users: Map of users who wrote the tickets k:id v:users
+    endOfStream : bool wether there are more tickets
+    nextCursor: next cursor (if exists)
+    firstOfStream :  wether there were more pages
+    prevCursor : the previous cursor (null if there is no previous cursor )
+}
+*/
+async function getTicketPage(after_cursor){
+    let val = {
+        statusCode : 200,
+        error : 'none',
+        tickets : [],
+        users : new Map(),
+        endOfStream : true,
+        nextCursor : null,
+        firstOfStream : true,
+        prevCursor : null, 
+    }
+    try {
+        let nextUrl = `https://${SUBD}.zendesk.com/api/v2/incremental/tickets/cursor.json?cursor=${after_cursor}&include=users&per_page=25`;
+        let response = await asyncGet(nextUrl);
+        if(response.statusCode != 200){
+            val.statusCode = response.statusCode;
+            val.error = response.body.error
+            return val;
+        };
+
+        evaluatePageBody(val, response.body);
+
+
+    } catch (err){
+        console.log("Error:");
+        console.log(err);
+        val.error = err;
+        return val;
+    }
+}
+
+
+
+
 //Dummy used for testing 
 async function f() {
-    let data = await getTicketInfo(91);
-    console.log(data.ticket);
+    await getAllTickets();
 }
 
 //f();
@@ -175,7 +285,10 @@ async function f() {
 
 module.exports = {
     getAllTickets,
+    getFirstPage,
     getTicketCount,
     getTicketInfo,
+    getTicketPage,
+    evaluatePageBody,
     asyncGet,
 }
