@@ -1,4 +1,5 @@
 const express = require('express')
+const SL = require('./ServerLogic');
 const path = require('path');
 const app = express()
 const port = 3000
@@ -9,8 +10,47 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/static/landing.html'))
 })
 
-app.get('/landing', (req , res) => {
-  
+app.get('/landing', async  (req , res) => {
+  try{
+    let data = await SL.getLandingPage();
+    if(data.error != 'none'){
+      if(data.error = "API down"){
+        res.send({"error" : "API down"})
+        return;
+      }
+      else {
+        res.send({"error" : "Service Unnavailable"})
+        return;
+      }
+    }
+    res.send(data);
+    return
+  } catch(error){
+    res.send({"error" : "Service Unnavailable"})
+    return;
+  }
+})
+
+app.get('/cursor/:cursor' , async  (req , res) => {
+  try{
+    let cursor = req.params.cursor;
+    let data = await SL.getCursorPage(cursor);
+    if(data.error != 'none'){
+      if(data.error = "API down"){
+        res.send({"error" : "API down"})
+        return;
+      }
+      else {
+        res.send({"error" : "Service Unnavailable"})
+        return;
+      }
+    }
+    res.send(data);
+    return
+  } catch(error){
+    res.send({"error" : "Service Unnavailable"})
+    return;
+  }
 })
 
 app.listen(port, () => {
@@ -51,23 +91,14 @@ Jest to test
   Landing (Refresh will also hit this point)
     Gets data returns first page of data
 
-  NextPage (Option 2)
+  NextPage (Option 2) -- (Get page given cursor )
     Params: nextPageUrl 
     Returns: data on the next page 
     Errors: url not valid
     Grabs the next page for the server if URL is correct
   
   
-  Previous Page 
-    Goes to the previos page if it exists 
-    Params: prevPageUrl
-    Returns: data on the previous page
-    Errors: url not valid 
-    Grabs the data for the previous page
-
-    
-
-
+  //Will Most likely just be handled on the front end by passing the front end all the data for a ticket at once 
   Ticket
     Params: TicketId
     Returns: All Info about this ticket
