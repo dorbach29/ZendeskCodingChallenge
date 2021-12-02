@@ -69,13 +69,13 @@ app.get('/ticket/:ticket', async (req , res) => {
 
 
 app.listen(port, () => {
-  console.log(`Server up`)
+  console.log(`Server up on port 3000`)
 })
 
 
 
 
-/* Daniel - Notes on Project
+/* Daniel - Notes To Self On  Project
 
 We need to serve some kind of webpage to the browser
 
@@ -109,11 +109,12 @@ Jest to test
   NextPage (Option 2) -- (Get page given cursor )
     Params: nextPageUrl 
     Returns: data on the next page 
-    Errors: url not valid
+    Errors: url not valid 
     Grabs the next page for the server if URL is correct
   
   
   //Will Most likely just be handled on the front end by passing the front end all the data for a ticket at once 
+  //Not implemented ^ 
   Ticket
     Params: TicketId
     Returns: All Info about this ticket

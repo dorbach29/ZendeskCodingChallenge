@@ -1,13 +1,13 @@
-/*
 
-Dom Handlers -- Methods that take in data and put it on the dom
-//TODO: Fix username issue at top of the screen
-*/
 
-let TicketData = null;
+let TicketData = null; //Data containing the ticktes on the page
 let prevCursorStack = []; //Stack Containing Previous Cursors -- Bottomost should be undefined. Used in getNext() and getPrev()
 let page = 1; 
 
+
+/*
+Dom Handlers -- Methods that take in data and put it on the Dom in some way
+*/
 const DomHandler =  {
 
     onLoadPage(){
@@ -82,6 +82,10 @@ const DomHandler =  {
 }
 
 
+
+/*
+Mostly event handlers that communicate with localhost:3000
+*/
 const api = {
     
     async getLanding(){
