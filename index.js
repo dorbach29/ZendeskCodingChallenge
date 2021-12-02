@@ -14,15 +14,9 @@ app.get('/landing', async  (req , res) => {
   try{
     let data = await SL.getLandingPage();
     if(data.error != 'none'){
-      if(data.error = "API down"){
-        res.send({"error" : "API down"})
-        return;
-      }
-      else {
-        res.send({"error" : "Service Unnavailable"})
-        return;
-      }
-    }
+      res.send({"error" : data.error})
+      return;
+  }
     res.send(data);
     return
   } catch(error){
@@ -36,14 +30,29 @@ app.get('/cursor/:cursor' , async  (req , res) => {
     let cursor = req.params.cursor;
     let data = await SL.getCursorPage(cursor);
     if(data.error != 'none'){
-      if(data.error = "API down"){
-        res.send({"error" : "API down"})
+      res.send({"error" : data.error})
+      return;
+  }
+    res.send(data);
+    return
+  } catch(error){
+    res.send({"error" : "Service Unnavailable"})
+    return;
+  }
+})
+
+
+app.get('/ticket/view' , (req, res) => {
+
+})
+
+app.get('/ticket/:ticket', async (req , res) => {
+  try{
+    let ticket = req.params.ticket;
+    let data = await SL.getTicketInfo(ticket);
+    if(data.error != 'none'){
+        res.send({"error" : data.error})
         return;
-      }
-      else {
-        res.send({"error" : "Service Unnavailable"})
-        return;
-      }
     }
     res.send(data);
     return
@@ -52,6 +61,7 @@ app.get('/cursor/:cursor' , async  (req , res) => {
     return;
   }
 })
+
 
 app.listen(port, () => {
   console.log(`Server up`)

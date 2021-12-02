@@ -13,6 +13,20 @@ function addUserInfo(tickets, users){
     return 
 }
 
+/*
+    Grabs nessecary data from data (ticket returned by getTicketInfo) and puts it in ticketInfo
+    data must be populated with a users map
+*/
+function fillTicketInfo(ticketInfo, data){
+    ticketInfo.tags = data.ticket.tags;
+    ticketInfo.user = data.users.get(data.ticket.requester_id).name;
+    ticketInfo.priority = data.ticket.priority;
+    ticketInfo.subject = data.ticket.subject;
+    ticketInfo.description = data.ticket.description;
+    ticketInfo.createdAt = data.ticket.created_at;
+    ticketInfo.updatedAt = data.ticket.updated_at;  
+}
+
 
 
 
@@ -23,11 +37,6 @@ async function getLandingPage(){
     try{
         const data = await ZH.getFirstPage();
         if(data.error != "none"){
-            if(data.statusCode == 503){
-                return {
-                    error : "API Down"
-                }
-            }
             return {
                 error : data.error,
             }
@@ -50,17 +59,34 @@ async function getCursorPage(cursor){
     try  {
         const data = await ZH.getTicketPage(cursor);
         if(data.error != "none"){
-            if(data.statusCode == 503){
-                return {
-                    error : "API Down"
-                }
-            }
             return {
                 error : data.error,
             }
         } 
         addUserInfo(data.tickets, data.users);
         return data; 
+    }
+    catch (err){
+        console.log(err);
+        return {
+            error : err,
+        }
+    }
+}
+
+async function getTicketInfo(ticket){
+    try  {
+        const ticketInfo = {
+            error : 'none',
+        }
+        const data = await ZH.getTicketInfo(ticket);
+        if(data.error != "none"){
+            return ({
+                error : data.error,
+            })
+        } 
+        fillTicketInfo(ticketInfo, data); 
+        return ticketInfo; 
     }
     catch (err){
         console.log(err);
@@ -77,13 +103,16 @@ async function getCursorPage(cursor){
 
 
 async function f(){
-    let data = await getLandingPage();
+    let data = await getCursorPage('\'');
+    console.log(data);
 }
 
-f();
+//f();
 
 module.exports = {
     addUserInfo,
+    fillTicketInfo,
     getCursorPage,
     getLandingPage,
+    getTicketInfo,
 }

@@ -69,7 +69,7 @@ const DomHandler =  {
     },
 
     genSingleTicketView(){
-
+        
     },
 
     handlePageNotFound(){
