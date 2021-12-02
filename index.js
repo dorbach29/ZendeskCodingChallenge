@@ -42,8 +42,8 @@ app.get('/cursor/:cursor' , async  (req , res) => {
 })
 
 
-app.get('/ticket/view' , (req, res) => {
-
+app.get('/ticket/view/:ticket' , (req, res) => {
+ res.sendFile(path.join(__dirname, 'static/ticket.html'));
 })
 
 app.get('/ticket/:ticket', async (req , res) => {

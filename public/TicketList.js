@@ -5,6 +5,7 @@ Dom Handlers -- Methods that take in data and put it on the dom
 */
 
 let TicketData = null;
+let prevCursorStack = []; //Stack Containing Previous Cursors -- Bottomost should be undefined. Used in getNext() and getPrev()
 let page = 1; 
 
 const DomHandler =  {
@@ -37,21 +38,24 @@ const DomHandler =  {
         const ticketList = document.getElementById("ticket-list");
         const listItem = document.createElement('li');
         listItem.index = index; 
-        listItem.innerHTML = this.genListItemString(ticket.subject, ticket.user , ticket.created_at, ticket.priortiy);
+        listItem.innerHTML = this.genListItemString(ticket.subject, ticket.user , ticket.created_at, ticket.priority, ticket.id);
         ticketList.appendChild(listItem);
 
     },
 
-    genListItemString(subject, requester, requested, priority){
+    genListItemString(subject, requester, requested, priority, id){
         return `         
         <div class="ticket-box">
-        <div class="list-section subject">${subject}</div>
-        <div class="border"></div>
-        <div class="list-section requester">${requester}</div>
-        <div class="border"></div>                    
-        <div class="list-section requested">${requested}</div>
-        <div class="border"></div>
-        <div class="list-section priority">${priority}</div>
+            <div class="list-section">
+                <a href="http://localhost:3000/ticket/view/${id}">View</a>
+            </div >
+            <div class="list-section subject">${subject ? subject : '-'}</div>
+            <div class="border"></div>
+            <div class="list-section requester">${requester ? requester : '-'}</div>
+            <div class="border"></div>                    
+            <div class="list-section requested">${requested ? requested : '-'}</div>
+            <div class="border"></div>
+            <div class="list-section priority">${priority ?priority : '-'}</div>
         </div>
         `
     },
@@ -92,12 +96,29 @@ const api = {
         }
     },
 
+    /**
+     * Loads the next page of data
+     * adds it's currentCursor if it exists onto the prevCursor stack
+     * sets the new currCorsor to equal the nextCursor
+     * informs TicketData it is not the end of stream anymore 
+     */
     async getNext(){
         try{
             if(!TicketData.endOfStream){
+            
+            let currCursor = TicketData.nextCursor;
+            let prevCursor = TicketData.currCursor; 
+            prevCursorStack.push(prevCursor);
+           
             let response = await fetch(`http://localhost:3000/cursor/${TicketData.nextCursor}`)
             response = await response.json()
             TicketData = response;
+            
+            TicketData.currCursor = currCursor;
+            TicketData.firstOfStream = false;
+       
+
+
             DomHandler.genList(response.tickets);
             DomHandler.nextClicked();
             DomHandler.onLoadPage();
@@ -107,12 +128,29 @@ const api = {
         }
     },
 
-    async getPrevious(){
+    /**
+     * Gets the previous page of ticktes
+     * Pops of previous cursor from stack, if it is null then it fetches data for the landing page
+     * Sets the currCursor to equal prevCursor
+     */
+    async getPrev(){
         try{
             if(!TicketData.firstOfStream){
-            let response = await fetch(`http://localhost:3000/cursor/${TicketData.prevCursor}`)
-            response = await response.json()
-            TicketData = response;
+            let response;
+
+            let prevCursor = prevCursorStack.pop();
+
+            if(prevCursor){
+                response = await fetch(`http://localhost:3000/cursor/${prevCursor}`)
+                response = await response.json()
+                TicketData = response;
+                TicketData.currCursor = prevCursor;
+                TicketData.firstOfStream = false;
+            } else {
+                response = await fetch(`http://localhost:3000/landing`);
+                response = await response.json();           
+                TicketData = response;
+            }
             DomHandler.genList(response.tickets);
             DomHandler.prevClicked();
             DomHandler.onLoadPage();
@@ -121,6 +159,7 @@ const api = {
             console.log(err);
         }
     },
+
 
 }
 

@@ -9,13 +9,27 @@
 /*General Style for body*/
 body {
     background-color: #03363D;
-     text-align: center; 
      font-family:sans-serif;
+     text-align : center;
+}
+
+
+
+.body-left{
+    text-align: left; 
 }
 
 /*Light text color */
 .text-white{
     color:#F8F9F9;
+}
+
+.bk-oat {
+    background: #ECE0CE;
+}
+
+.para {
+    padding : 0.3rem;
 }
 
 /*Classes that have to do with ticket displays in a list*/
@@ -40,11 +54,11 @@ body {
 }
 
 .requester {
-    width: 25%
+    width: 20%
 }
 
 .requested {
-    width: 25%
+    width: 20%
 }
 
 .priority {
