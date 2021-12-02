@@ -52,9 +52,10 @@ async function getLandingPage(){
     }
 }; 
 
-/*
-    Get's page of tickets specified by cursor where cursor is the specified index 
-*/
+/**
+ * Returns the tickets pointed to by cursor, fills in names of requesters
+ * @param {cursor} cursor 
+ */
 async function getCursorPage(cursor){
     try  {
         const data = await ZH.getTicketPage(cursor);
@@ -74,6 +75,12 @@ async function getCursorPage(cursor){
     }
 }
 
+
+/**
+ * Returns the data for the specified ticket, appends the users name
+ * 
+ * @param {Number} ticket  ticket number to use 
+ */
 async function getTicketInfo(ticket){
     try  {
         const ticketInfo = {

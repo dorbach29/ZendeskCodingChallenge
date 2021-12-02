@@ -16,7 +16,6 @@ Module that handles calls to the Zendesk API
             users : Map
         }
 */
-
 function evaluateUsers(val, users){
     for(let i = 0; i < users.length; i ++){
         let user = users[i];

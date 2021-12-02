@@ -6,10 +6,12 @@ const port = 3000
 
 app.use(express.static(path.join(__dirname, '/public')));
 
+//Returns the homepages
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/static/landing.html'))
 })
 
+//Fetches first batch of tickets for an account
 app.get('/landing', async  (req , res) => {
   try{
     let data = await SL.getLandingPage();
@@ -25,6 +27,7 @@ app.get('/landing', async  (req , res) => {
   }
 })
 
+//Returns the data for the ticktes pointed to by cursosr
 app.get('/cursor/:cursor' , async  (req , res) => {
   try{
     let cursor = req.params.cursor;
@@ -41,11 +44,13 @@ app.get('/cursor/:cursor' , async  (req , res) => {
   }
 })
 
-
+//Returns the html for the ticket page
 app.get('/ticket/view/:ticket' , (req, res) => {
  res.sendFile(path.join(__dirname, 'static/ticket.html'));
 })
 
+
+//Returns the data for the specified ticket
 app.get('/ticket/:ticket', async (req , res) => {
   try{
     let ticket = req.params.ticket;

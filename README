@@ -1,0 +1,32 @@
+Website to view the tickets associated with a Zenesk Account
+Created By: Daniel Orbach
+
+
+Instructions for setup:
+    -Pull Repository
+    -Run $npm install
+    -In the source directory create a file name '.env'
+    -Copy the following into '.env' (not including quotes)
+
+    "
+    ZEN_USER={username}
+    ZEN_PASS={password}
+    SUBD={subdomain}
+    "
+
+    -Replace {username} , {password}, and {subdomain} with your zendesk
+     username, password and subdomain
+    -Your subdomain is whatever is between https:// and .zendesk.com  
+        ex: https://{subdomain}.zendesk.com
+    -Save .env
+    -Run $npm start
+    -You can now view the website at http://localhost:3000 !!!
+    -Thank you!
+
+Testing:
+    -To Run Unit Tests run the command: $npm run test
+    -Testing is done using jest, and tests most of the logic included on the backend
+
+
+Thank you for your consideration, and I look forward to hearing your thoughts on the project!!!! 
+-Daniel Orbach
