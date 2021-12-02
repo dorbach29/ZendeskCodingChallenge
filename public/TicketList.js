@@ -72,12 +72,12 @@ const DomHandler =  {
         ticketCount.innerHTML = `Showing Tickets ${page} - ${page+TicketData.tickets.length-1}`
     },
 
-    genSingleTicketView(){
-        
-    },
 
-    handlePageNotFound(){
-
+    handleError(error){
+        let list = document.getElementById("ticket-list");
+        list.innerHTML = `
+            <h3 class='text-white'>${error}</h3>
+        `
     },
 }
 
@@ -88,6 +88,10 @@ const api = {
         try{
             let response = await fetch("http://localhost:3000/landing")
             response = await response.json()
+            if(response.error != 'none'){
+                DomHandler.handleError(response.error);
+                return; 
+            }
             TicketData = response;
             DomHandler.genList(response.tickets);
             DomHandler.onLoadPage();
@@ -112,6 +116,10 @@ const api = {
            
             let response = await fetch(`http://localhost:3000/cursor/${TicketData.nextCursor}`)
             response = await response.json()
+            if(response.error != 'none'){
+                DomHandler.handleError(response.error);
+                return; 
+            }
             TicketData = response;
             
             TicketData.currCursor = currCursor;
@@ -143,12 +151,20 @@ const api = {
             if(prevCursor){
                 response = await fetch(`http://localhost:3000/cursor/${prevCursor}`)
                 response = await response.json()
+                if(response.error != 'none'){
+                    DomHandler.handleError(response.error);
+                    return; 
+                }
                 TicketData = response;
                 TicketData.currCursor = prevCursor;
                 TicketData.firstOfStream = false;
             } else {
                 response = await fetch(`http://localhost:3000/landing`);
-                response = await response.json();           
+                response = await response.json(); 
+                if(response.error != 'none'){
+                    DomHandler.handleError(response.error);
+                    return; 
+                }          
                 TicketData = response;
             }
             DomHandler.genList(response.tickets);
