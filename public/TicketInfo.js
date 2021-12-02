@@ -22,7 +22,7 @@ function generateAttribute(ticket, key){
     div.innerHTML = `    
     <h3 class="text-white">${key}</h3>
     <div class="bk-oat">
-        <p class="para">${ticket[key]}</p> 
+        <p class="para">${ticket[key] ? ticket[key] : '-'}</p> 
     </div>
     `
     document.getElementById("attributes").appendChild(div);

@@ -3,9 +3,9 @@ Created By: Daniel Orbach
 
 
 Instructions for setup:
-    -Pull Repository
+    -Clone repository and enter it
     -Run $npm install
-    -In the source directory create a file name '.env'
+    -In the source directory (same one as you are in) create a file name '.env'
     -Copy the following into '.env' (not including quotes)
 
     "
@@ -19,7 +19,8 @@ Instructions for setup:
     -Your subdomain is whatever is between https:// and .zendesk.com  
         ex: https://{subdomain}.zendesk.com
     -Save .env
-    -Run $npm start
+    -Run $npm start 
+        This runs the server using nodemon (for development use)
     -You can now view the website at http://localhost:3000 !!!
     -Thank you!
 
